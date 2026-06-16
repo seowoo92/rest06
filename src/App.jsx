@@ -13,6 +13,7 @@ import CommunityReview from './pages/CommunityReview'
 import CommunityInquiry from './pages/CommunityInquiry'
 import Login from './pages/Login'
 import { useTheme } from './context/ThemeContext'
+import ChatBot from './components/ChatBot'
 import './index.css'
 
 /* ── Floating help button (sub-pages only) ── */
@@ -23,8 +24,8 @@ function FloatingBtn({ onClick }) {
       aria-label="도움 신청"
       style={{
         position: 'fixed',
-        bottom: '2rem',
-        right: '2rem',
+        bottom: '7rem',
+        right: '1.5rem',
         zIndex: 900,
         background: 'var(--grad)',
         color: '#fff',
@@ -126,6 +127,9 @@ export default function App() {
       {!isHome && !isLoginPage && (
         <FloatingBtn onClick={() => openBookingWith()} />
       )}
+
+      {/* AI Chatbot — all pages */}
+      <ChatBot />
 
       {/* Booking modal */}
       {isBookingOpen && (
