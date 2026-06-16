@@ -65,7 +65,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({ model, messages: fullMessages }),
+      body: JSON.stringify({ model, messages: fullMessages, stream: true }),
     })
 
     if (!response.ok) {
@@ -73,11 +73,13 @@ serve(async (req) => {
       throw new Error(`API 오류 (${response.status}): ${errText}`)
     }
 
-    const data = await response.json()
-    const content = data.choices?.[0]?.message?.content ?? ''
-
-    return new Response(JSON.stringify({ content }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    return new Response(response.body, {
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'X-Content-Type-Options': 'nosniff',
+      },
     })
   } catch (error) {
     return new Response(
