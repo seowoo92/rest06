@@ -1,0 +1,144 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: var(--bg);
+  color: var(--ink);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+a {
+  font-family: inherit;
+  text-decoration: none;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--primary-tint);
+}
+
+::placeholder {
+  color: var(--muted-2);
+  opacity: 1;
+}
+
+:where(
+  section, header, footer, div, span, button, a,
+  input, textarea, h1, h2, h3, h4, p, nav, label,
+  main, li
+) {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+/* ─── CSS Variables (green theme + light mode defaults) ─── */
+:root {
+  /* Light mode */
+  --bg: #FBF7EF;
+  --surface: #FFFFFF;
+  --surface-2: #F6F1E8;
+  --surface-3: #F1ECE2;
+  --input-bg: #FAF6EE;
+  --ink: #262A2E;
+  --muted: #606A6E;
+  --muted-2: #8B9398;
+  --line: #E7E0D5;
+  --line-2: #EFE8DD;
+  --line-3: #F3EDE3;
+  --footer-bg: #20262B;
+
+  /* Green theme (default) */
+  --primary: #1FA46A;
+  --primary-strong: #15784E;
+  --primary-tint: #E2F3EA;
+  --secondary: #5BC08C;
+  --grad: linear-gradient(135deg, #1FA46A 0%, #5BC08C 100%);
+  --ring-rgb: 31, 164, 106;
+}
+
+/* ─── Keyframe Animations ─── */
+@keyframes floatA {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-14px); }
+}
+
+@keyframes floatB {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(13px); }
+}
+
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0   rgba(var(--ring-rgb), 0.45); }
+  70%  { box-shadow: 0 0 0 18px rgba(var(--ring-rgb), 0); }
+  100% { box-shadow: 0 0 0 0   rgba(var(--ring-rgb), 0); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes overlayIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes barFill {
+  from { width: 0; }
+  to   { width: 64%; }
+}
+
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes revealIn {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ─── Scrollbar ─── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--line);
+}
+
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--line);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-strong);
+}

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;white-space:nowrap;}
+a{font-family:inherit;}
+input,textarea,select{font-family:inherit;}
+::selection{background:var(--primary-tint);}
+::placeholder{color:var(--muted-2);opacity:1;}
+:where(section,header,footer,div,span,button,a,input,textarea,h1,h2,h3,h4,p,nav,label,main,li){transition:background-color .4s ease,color .4s ease,border-color .4s ease;}
+:root{--bg:#FBF7EF;--surface:#FFFFFF;--surface-2:#F6F1E8;--surface-3:#F1ECE2;--input-bg:#FAF6EE;--ink:#262A2E;--muted:#606A6E;--muted-2:#8B9398;--line:#E7E0D5;--line-2:#EFE8DD;--line-3:#F3EDE3;--footer-bg:#20262B;--primary:#1FA46A;--primary-strong:#15784E;--primary-tint:#E2F3EA;--secondary:#5BC08C;--grad:linear-gradient(135deg,#1FA46A 0%,#5BC08C 100%);--ring-rgb:31,164,106;}
+@keyframes floatA{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes floatB{0%,100%{transform:translateY(0)}50%{transform:translateY(13px)}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(var(--ring-rgb),0.45)}70%{box-shadow:0 0 0 18px rgba(var(--ring-rgb),0)}100%{box-shadow:0 0 0 0 rgba(var(--ring-rgb),0)}}
+@keyframes modalIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes overlayIn{from{opacity:0}to{opacity:1}}
+@keyframes barFill{from{width:0}to{width:64%}}
+@keyframes pageIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden;position:relative;transition:background-color .4s ease,color .4s ease;">
+
+<header ref="{{ headerRef }}" style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:var(--bg);transition:box-shadow .3s ease,background-color .4s ease;">
+  <div style="max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;gap:18px;">
+    <button onClick="{{ go.home }}" style="display:flex;align-items:center;gap:10px;">
+      <span style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:11px;background:var(--grad);box-shadow:0 6px 16px rgba(var(--ring-rgb),0.32);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 11.2 12 5l8 6.2V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z" fill="#fff"/><circle cx="12" cy="13.2" r="1.7" fill="var(--primary)"/></svg>
+      </span>
+      <span style="font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-0.03em;white-space:nowrap;">다손</span>
+    </button>
+
+    <nav style="display:flex;align-items:center;gap:6px;">
+      <div onMouseEnter="{{ go.enterAbout }}" onMouseLeave="{{ go.leaveMenu }}" style="position:relative;">
+        <button onClick="{{ go.aboutCompany }}" style="display:flex;align-items:center;gap:5px;font-size:15px;font-weight:600;padding:8px 14px;border-radius:10px;white-space:nowrap;color:{{ aboutColor }};" style-hover="background:var(--surface-2);">회사소개 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <sc-if value="{{ aboutMenuOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);padding-top:10px;z-index:60;">
+            <div style="min-width:230px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 44px rgba(0,0,0,0.14);padding:8px;">
+              <button onClick="{{ go.aboutCompany }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">회사소개</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">다손이 걸어온 길과 가치</div></button>
+              <button onClick="{{ go.aboutCeo }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">CEO 소개</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">대표가 전하는 이야기</div></button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div onMouseEnter="{{ go.enterSvc }}" onMouseLeave="{{ go.leaveMenu }}" style="position:relative;">
+        <button onClick="{{ go.svcAll }}" style="display:flex;align-items:center;gap:5px;font-size:15px;font-weight:600;padding:8px 14px;border-radius:10px;white-space:nowrap;color:{{ svcColor }};" style-hover="background:var(--surface-2);">서비스 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <sc-if value="{{ svcMenuOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);padding-top:10px;z-index:60;">
+            <div style="min-width:230px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 44px rgba(0,0,0,0.14);padding:8px;">
+              <button onClick="{{ go.svcAll }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">전체 서비스</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">집수리·조립·이사·장보기·돌봄</div></button>
+              <button onClick="{{ go.svcHow }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">이용방법</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">신청부터 완료까지 3단계</div></button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+
+      <div onMouseEnter="{{ go.enterCom }}" onMouseLeave="{{ go.leaveMenu }}" style="position:relative;">
+        <button onClick="{{ go.comNotice }}" style="display:flex;align-items:center;gap:5px;font-size:15px;font-weight:600;padding:8px 14px;border-radius:10px;white-space:nowrap;color:{{ comColor }};" style-hover="background:var(--surface-2);">커뮤니티 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <sc-if value="{{ comMenuOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:100%;left:50%;transform:translateX(-50%);padding-top:10px;z-index:60;">
+            <div style="min-width:230px;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 44px rgba(0,0,0,0.14);padding:8px;">
+              <button onClick="{{ go.comNotice }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">공지사항</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">이벤트·업데이트 소식</div></button>
+              <button onClick="{{ go.comReview }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">이용후기</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">실제 고객들의 생생한 후기</div></button>
+              <button onClick="{{ go.comInquiry }}" style="display:block;width:100%;text-align:left;padding:11px 13px;border-radius:11px;" style-hover="background:var(--surface-2);"><div style="font-size:14.5px;font-weight:700;color:var(--ink);">문의하기</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:2px;">궁금한 점을 남겨주세요</div></button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </nav>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="display:flex;align-items:center;gap:9px;padding:6px 11px;background:var(--surface);border:1px solid var(--line);border-radius:999px;">
+        <sc-for list="{{ themeSwatches }}" as="th" hint-placeholder-count="3">
+          <button onClick="{{ th.onClick }}" title="{{ th.label }}" style="width:22px;height:22px;border-radius:50%;background:{{ th.grad }};box-shadow:{{ th.ring }};transition:transform .15s ease;flex-shrink:0;" style-hover="transform:scale(1.14);"></button>
+        </sc-for>
+        <span style="width:1px;height:18px;background:var(--line);"></span>
+        <button onClick="{{ toggleMode }}" title="다크/라이트 전환" style="width:32px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--ink);" style-hover="background:var(--surface-3);">
+          <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></sc-if>
+          <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></sc-if>
+        </button>
+      </div>
+      <button onClick="{{ book.new }}" style="padding:11px 20px;font-size:14px;font-weight:700;color:#fff;background:var(--primary);border-radius:999px;box-shadow:0 8px 20px rgba(var(--ring-rgb),0.32);transition:transform .15s ease;white-space:nowrap;" style-hover="transform:translateY(-2px);">도움 신청</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+<main data-screen-label="홈" style="animation:pageIn .4s ease;">
+  <section style="position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-120px;right:-80px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(var(--ring-rgb),0.18),transparent 70%);filter:blur(10px);"></div>
+    <div style="position:absolute;bottom:-140px;left:-100px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(91,192,140,0.16),transparent 70%);filter:blur(10px);"></div>
+    <div style="position:relative;max-width:1200px;margin:0 auto;padding:60px 24px 88px;display:grid;grid-template-columns:1.02fr 0.98fr;gap:48px;align-items:center;">
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;background:var(--primary-tint);border-radius:999px;margin-bottom:22px;">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px rgba(var(--ring-rgb),0.18);"></span>
+          <span style="font-size:13px;font-weight:700;color:var(--primary-strong);">청년 1인 가구를 위한 생활 도움 서비스</span>
+        </div>
+        <h1 style="margin:0 0 20px;font-size:clamp(34px,4.6vw,58px);font-weight:800;line-height:1.12;letter-spacing:-0.035em;color:var(--ink);">필요한 모든 순간,<br><span style="color:var(--primary);">다손</span>이 손이 되어드려요</h1>
+        <p style="margin:0 0 32px;font-size:18px;line-height:1.7;color:var(--muted);max-width:480px;">전구 갈이부터 가구 조립, 무거운 짐 옮기기, 장보기, 반려동물 돌봄까지. 검증된 매니저가 평균 45분 안에 당신의 집으로 찾아갑니다.</p>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:30px;">
+          <button onClick="{{ book.new }}" style="display:inline-flex;align-items:center;gap:9px;padding:16px 26px;font-size:16px;font-weight:700;color:#fff;background:var(--primary);border-radius:14px;box-shadow:0 12px 28px rgba(var(--ring-rgb),0.34);transition:transform .15s ease;white-space:nowrap;" style-hover="transform:translateY(-2px);">지금 도움 신청하기 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button onClick="{{ go.svcAll }}" style="display:inline-flex;align-items:center;gap:8px;padding:16px 24px;font-size:16px;font-weight:700;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:14px;transition:transform .15s ease;white-space:nowrap;" style-hover="transform:translateY(-2px);">서비스 둘러보기</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="display:flex;">
+            <span style="width:34px;height:34px;border-radius:50%;background:#E08A2B;border:2.5px solid var(--bg);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;">서</span>
+            <span style="width:34px;height:34px;border-radius:50%;background:#3E8DD6;border:2.5px solid var(--bg);margin-left:-11px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;">민</span>
+            <span style="width:34px;height:34px;border-radius:50%;background:#2FA26B;border:2.5px solid var(--bg);margin-left:-11px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;">현</span>
+            <span style="width:34px;height:34px;border-radius:50%;background:#7E76D6;border:2.5px solid var(--bg);margin-left:-11px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;">지</span>
+          </div>
+          <span style="font-size:14px;color:var(--muted);line-height:1.4;">이번 주 <b style="color:var(--ink);">2,431명</b>의 1인 가구가<br>다손과 함께했어요</span>
+        </div>
+      </div>
+      <div style="position:relative;display:flex;justify-content:center;">
+        <div style="position:absolute;top:30px;left:10px;width:90%;height:88%;border-radius:36px;background:linear-gradient(135deg,rgba(var(--ring-rgb),0.16),rgba(91,192,140,0.10));"></div>
+        <div style="position:relative;width:312px;background:var(--surface);border-radius:32px;padding:18px;box-shadow:0 30px 70px rgba(38,42,46,0.20);border:1px solid var(--line-2);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding:0 4px;"><span style="font-size:13px;font-weight:700;color:var(--ink);">매니저 매칭 완료</span><span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#2FA26B;"><span style="width:7px;height:7px;border-radius:50%;background:#2FA26B;"></span>실시간</span></div>
+          <div style="position:relative;height:118px;border-radius:18px;overflow:hidden;background:linear-gradient(150deg,#DCEFE3,#E8F1FB);margin-bottom:14px;">
+            <svg style="position:absolute;inset:0;" width="100%" height="100%" viewBox="0 0 280 118" fill="none" preserveAspectRatio="none"><path d="M20 96 C80 96 90 40 150 40 S240 30 260 22" stroke="var(--primary)" stroke-width="3" stroke-dasharray="2 8" stroke-linecap="round"/></svg>
+            <span style="position:absolute;left:18px;bottom:14px;width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid #2FA26B;"></span>
+            <span style="position:absolute;right:18px;top:14px;display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50% 50% 50% 2px;background:var(--primary);box-shadow:0 6px 14px rgba(var(--ring-rgb),0.4);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 11.2 12 5l8 6.2V19h-5v-5H9v5H4z" fill="#fff"/></svg></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:11px;padding:12px;border-radius:16px;background:var(--surface-2);margin-bottom:12px;"><span style="width:42px;height:42px;border-radius:50%;background:var(--grad);display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:700;">현</span><div style="flex:1;"><div style="font-size:14px;font-weight:700;color:var(--ink);">이현우 매니저</div><div style="display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted-2);margin-top:2px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><b style="color:var(--ink);">4.9</b> · 집수리 전문 · 1.2km</div></div></div>
+          <div style="padding:0 4px 4px;"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted-2);margin-bottom:7px;"><span>도착까지</span><b style="color:var(--primary);">12분</b></div><div style="height:8px;border-radius:999px;background:var(--line-2);overflow:hidden;"><div style="height:100%;border-radius:999px;background:var(--grad);animation:barFill 1.6s ease forwards;"></div></div></div>
+        </div>
+        <div style="position:absolute;top:-16px;left:-26px;display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface);border-radius:14px;box-shadow:0 14px 30px rgba(38,42,46,0.14);animation:floatA 5s ease-in-out infinite;z-index:3;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><span style="font-size:13px;font-weight:700;color:var(--ink);">평균 평점 4.9</span></div>
+        <div style="position:absolute;bottom:24px;left:-18px;display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface);border-radius:14px;box-shadow:0 14px 30px rgba(38,42,46,0.14);animation:floatB 6s ease-in-out infinite;"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:#E0F1E8;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17l9-10" stroke="#2FA26B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="font-size:13px;font-weight:700;color:var(--ink);">누적 도움 12만 건</span></div>
+        <div style="position:absolute;bottom:96px;right:-22px;max-width:170px;padding:12px 14px;background:var(--ink);border-radius:14px;box-shadow:0 14px 30px rgba(38,42,46,0.22);animation:floatA 6.5s ease-in-out infinite;"><span style="font-size:12.5px;font-weight:600;color:var(--surface);line-height:1.45;">딩동! 매니저가 곧 도착해요 🔔</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--surface);border-top:1px solid var(--line-2);border-bottom:1px solid var(--line-2);">
+    <div style="max-width:1100px;margin:0 auto;padding:30px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;">
+      <div><div style="font-size:30px;font-weight:800;color:var(--primary);letter-spacing:-0.03em;">12만+</div><div style="font-size:14px;color:var(--muted-2);margin-top:4px;font-weight:600;">누적 도움 건수</div></div>
+      <div style="border-left:1px solid var(--line-2);"><div style="font-size:30px;font-weight:800;color:#E08A2B;letter-spacing:-0.03em;">4.9점</div><div style="font-size:14px;color:var(--muted-2);margin-top:4px;font-weight:600;">평균 만족도</div></div>
+      <div style="border-left:1px solid var(--line-2);"><div style="font-size:30px;font-weight:800;color:#3E8DD6;letter-spacing:-0.03em;">3,200명</div><div style="font-size:14px;color:var(--muted-2);margin-top:4px;font-weight:600;">검증된 매니저</div></div>
+      <div style="border-left:1px solid var(--line-2);"><div style="font-size:30px;font-weight:800;color:#7E76D6;letter-spacing:-0.03em;">45분</div><div style="font-size:14px;color:var(--muted-2);margin-top:4px;font-weight:600;">평균 도착 시간</div></div>
+    </div>
+  </section>
+
+  <section style="max-width:1200px;margin:0 auto;padding:84px 24px 28px;">
+    <div data-reveal style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px;">
+      <div><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">SERVICES</span><h2 style="margin:10px 0 8px;font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-0.03em;color:var(--ink);">필요한 모든 생활 도움, 한 곳에</h2><p style="margin:0;font-size:17px;color:var(--muted);">집안의 크고 작은 일, 카드 하나만 누르면 매니저가 찾아와요.</p></div>
+      <button onClick="{{ go.svcAll }}" style="display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:700;color:var(--primary);padding:10px 0;white-space:nowrap;">전체 서비스 보기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;">
+      <sc-for list="{{ serviceList }}" as="sv" hint-placeholder-count="5">
+        <button data-reveal onClick="{{ sv.onCardClick }}" style="text-align:left;display:flex;flex-direction:column;gap:16px;padding:26px 22px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;box-shadow:0 6px 18px rgba(38,42,46,0.04);transition:transform .2s ease,box-shadow .2s ease;" style-hover="transform:translateY(-7px);box-shadow:0 18px 38px rgba(38,42,46,0.10);">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:16px;background:{{ sv.tint }};">{{ sv.icon }}</span>
+          <div><div style="font-size:19px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">{{ sv.name }}</div><div style="font-size:14px;color:var(--muted-2);line-height:1.55;margin-top:6px;min-height:42px;">{{ sv.tagline }}</div></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px;"><span style="font-size:15px;font-weight:800;color:{{ sv.color }};">{{ sv.price }}</span><span style="display:inline-flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:var(--ink);">신청 <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+        </button>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="max-width:1200px;margin:0 auto;padding:72px 24px;">
+    <div data-reveal style="text-align:center;margin-bottom:50px;"><span style="font-size:14px;font-weight:800;color:#E08A2B;letter-spacing:0.04em;">HOW IT WORKS</span><h2 style="margin:10px 0 12px;font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-0.03em;color:var(--ink);">이용은 이렇게, 정말 간단해요</h2><p style="margin:0;font-size:17px;color:var(--muted);">3단계면 충분해요. 가입 없이 1분 만에 도움을 받아보세요.</p></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;">
+      <div data-reveal style="position:relative;padding:34px 28px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;"><span style="position:absolute;top:24px;right:26px;font-size:46px;font-weight:800;color:var(--primary-tint);">01</span><span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:15px;background:var(--primary-tint);margin-bottom:18px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 8px;font-size:20px;font-weight:800;color:var(--ink);">도움 신청</h3><p style="margin:0;font-size:15px;color:var(--muted);line-height:1.65;">필요한 서비스를 고르고 방문 시간·주소만 입력하면 끝이에요.</p></div>
+      <div data-reveal style="position:relative;padding:34px 28px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;"><span style="position:absolute;top:24px;right:26px;font-size:46px;font-weight:800;color:#FBEEDB;">02</span><span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:15px;background:#FBEEDB;margin-bottom:18px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M17 20h5v-2a4 4 0 0 0-3-3.87M9 20H4v-2a4 4 0 0 1 3-3.87M16 3.13a4 4 0 0 1 0 7.75M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#E08A2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 8px;font-size:20px;font-weight:800;color:var(--ink);">매니저 매칭</h3><p style="margin:0;font-size:15px;color:var(--muted);line-height:1.65;">가까운 검증된 매니저를 1분 안에 연결하고, 실시간 위치를 알려드려요.</p></div>
+      <div data-reveal style="position:relative;padding:34px 28px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;"><span style="position:absolute;top:24px;right:26px;font-size:46px;font-weight:800;color:#E0F1E8;">03</span><span style="display:inline-flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:15px;background:#E0F1E8;margin-bottom:18px;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.7-7 10-7 10z" stroke="#2FA26B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 8px;font-size:20px;font-weight:800;color:var(--ink);">완료 &amp; 후기</h3><p style="margin:0;font-size:15px;color:var(--muted);line-height:1.65;">일이 끝나면 앱에서 간편하게 결제하고, 따뜻한 후기를 남겨요.</p></div>
+    </div>
+  </section>
+
+  <section style="background:var(--surface);border-top:1px solid var(--line-2);">
+    <div style="max-width:920px;margin:0 auto;padding:78px 24px;">
+      <div data-reveal style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:38px;"><div><span style="font-size:14px;font-weight:800;color:#3E8DD6;letter-spacing:0.04em;">REVIEWS</span><h2 style="margin:10px 0 0;font-size:clamp(28px,3.4vw,40px);font-weight:800;letter-spacing:-0.03em;color:var(--ink);">다손을 경험한 사람들</h2></div><button onClick="{{ go.comReview }}" style="font-size:15px;font-weight:700;color:var(--primary);white-space:nowrap;">후기 더보기</button></div>
+      <div data-reveal style="position:relative;">
+        <div style="overflow:hidden;border-radius:26px;"><div style="display:flex;transition:transform .55s cubic-bezier(.2,.7,.2,1);transform:{{ trackTransform }};">
+          <sc-for list="{{ homeReviewList }}" as="rv" hint-placeholder-count="1">
+            <div style="flex:0 0 100%;padding:46px 48px;background:var(--surface-2);">
+              <div style="display:flex;gap:3px;margin-bottom:20px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg></div>
+              <p style="margin:0 0 26px;font-size:21px;line-height:1.65;font-weight:600;color:var(--ink);letter-spacing:-0.01em;">“{{ rv.q }}”</p>
+              <div style="display:flex;align-items:center;gap:13px;"><span style="width:46px;height:46px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;background:{{ rv.color }};">{{ rv.initial }}</span><div style="flex:1;"><div style="font-size:15px;font-weight:700;color:var(--ink);">{{ rv.name }}</div><div style="font-size:13px;color:var(--muted-2);margin-top:2px;">{{ rv.meta }}</div></div><span style="padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:700;color:{{ rv.color }};background:{{ rv.tint }};">{{ rv.tag }}</span></div>
+            </div>
+          </sc-for>
+        </div></div>
+        <button onClick="{{ prevReview }}" style="position:absolute;top:50%;left:-18px;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:var(--surface);border:1px solid var(--line);box-shadow:0 8px 20px rgba(38,42,46,0.10);display:flex;align-items:center;justify-content:center;color:var(--ink);" style-hover="background:var(--primary-tint);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button onClick="{{ nextReview }}" style="position:absolute;top:50%;right:-18px;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;background:var(--surface);border:1px solid var(--line);box-shadow:0 8px 20px rgba(38,42,46,0.10);display:flex;align-items:center;justify-content:center;color:var(--ink);" style-hover="background:var(--primary-tint);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      </div>
+      <div style="display:flex;justify-content:center;gap:8px;margin-top:24px;"><sc-for list="{{ revDots }}" as="d" hint-placeholder-count="4"><button onClick="{{ d.onClick }}" style="height:8px;border-radius:999px;transition:all .3s ease;width:{{ d.w }};background:{{ d.bg }};"></button></sc-for></div>
+    </div>
+  </section>
+
+  <section style="max-width:1200px;margin:0 auto;padding:76px 24px;">
+    <div data-reveal style="position:relative;overflow:hidden;border-radius:32px;padding:60px 48px;background:var(--grad);text-align:center;box-shadow:0 26px 60px rgba(var(--ring-rgb),0.30);">
+      <div style="position:absolute;top:-60px;right:-30px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.12);"></div>
+      <div style="position:absolute;bottom:-80px;left:-40px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,0.10);"></div>
+      <div style="position:relative;"><h2 style="margin:0 0 14px;font-size:clamp(26px,3.2vw,40px);font-weight:800;color:#fff;letter-spacing:-0.03em;line-height:1.2;">오늘 미뤄둔 집안일,<br>다손에게 맡겨보세요</h2><p style="margin:0 0 30px;font-size:17px;color:rgba(255,255,255,0.92);">가입 없이 1분이면 신청 완료. 지금 첫 도움 20% 할인 중이에요.</p><div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;"><button onClick="{{ book.new }}" style="padding:16px 30px;font-size:16px;font-weight:800;color:var(--primary);background:#fff;border-radius:14px;box-shadow:0 12px 26px rgba(0,0,0,0.14);transition:transform .15s ease;" style-hover="transform:translateY(-2px);">무료로 도움 신청하기</button><button style="padding:16px 26px;font-size:16px;font-weight:700;color:#fff;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.5);border-radius:14px;">앱 다운로드</button></div></div>
+    </div>
+  </section>
+</main>
+</sc-if>
+
+<!-- ============ ABOUT - COMPANY ============ -->
+<sc-if value="{{ isAboutCompany }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="회사소개" style="animation:pageIn .4s ease;max-width:1100px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="text-align:center;margin-bottom:56px;">
+    <span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">ABOUT DASON</span>
+    <h1 style="margin:12px 0 18px;font-size:clamp(30px,4vw,48px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);line-height:1.2;">혼자 사는 삶에도,<br>든든한 손 하나쯤은 있어야 하니까</h1>
+    <p style="margin:0 auto;max-width:600px;font-size:17px;line-height:1.75;color:var(--muted);">다손은 점점 늘어나는 1인 가구가 일상에서 마주하는 ‘혼자서는 버거운 순간’을 가까운 이웃의 손길로 채우기 위해 시작했습니다.</p>
+  </div>
+
+  <div style="position:relative;height:300px;border-radius:28px;overflow:hidden;background:var(--grad);display:flex;align-items:center;justify-content:center;margin-bottom:64px;box-shadow:0 24px 56px rgba(var(--ring-rgb),0.22);">
+    <div style="position:absolute;top:-40px;left:-20px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.12);"></div>
+    <div style="position:absolute;bottom:-60px;right:-10px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.10);"></div>
+    <div style="position:relative;text-align:center;color:#fff;"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" style="margin-bottom:10px;"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-5h6v5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div style="font-size:16px;font-weight:700;opacity:0.95;">다손 팀 · 우리 동네 생활 도움 파트너</div><div style="font-size:13px;opacity:0.7;margin-top:6px;">[ 팀/오피스 이미지 영역 ]</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:0.9fr 1.1fr;gap:48px;align-items:center;margin-bottom:72px;">
+    <div><span style="font-size:13px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">OUR STORY</span><h2 style="margin:10px 0 0;font-size:30px;font-weight:800;letter-spacing:-0.03em;color:var(--ink);line-height:1.25;">작은 불편을<br>가볍게 만드는 일</h2></div>
+    <div style="font-size:16px;line-height:1.85;color:var(--muted);">
+      <p style="margin:0 0 16px;">전구 하나를 갈려고 사다리를 사야 할지 고민하고, 무거운 생수를 들고 계단을 오르며, 이케아 가구 박스 앞에서 막막했던 경험. 혼자 사는 사람이라면 누구나 겪는 일입니다.</p>
+      <p style="margin:0;">다손은 이런 ‘사소하지만 버거운 일’을 검증된 매니저가 빠르고 친절하게 대신해 드립니다. 누구나 부담 없이 도움을 청하고, 정당한 보상으로 도움을 나누는 건강한 생활 도움 생태계를 만들어 갑니다.</p>
+    </div>
+  </div>
+
+  <div style="margin-bottom:72px;">
+    <h2 style="text-align:center;margin:0 0 36px;font-size:30px;font-weight:800;letter-spacing:-0.03em;color:var(--ink);">다손이 지키는 4가지 약속</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+      <div style="padding:28px 22px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:var(--primary-tint);margin-bottom:16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v6c0 4.2-3 7.4-7 9-4-1.6-7-4.8-7-9V6z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 6px;font-size:17px;font-weight:800;color:var(--ink);">신뢰</h3><p style="margin:0;font-size:14px;color:var(--muted-2);line-height:1.6;">신원 확인과 교육을 마친 매니저만 연결해요.</p></div>
+      <div style="padding:28px 22px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:#E8F1FB;margin-bottom:16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4M12 3l7 3v6c0 4.2-3 7.4-7 9-4-1.6-7-4.8-7-9V6z" stroke="#3E8DD6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 6px;font-size:17px;font-weight:800;color:var(--ink);">안전</h3><p style="margin:0;font-size:14px;color:var(--muted-2);line-height:1.6;">모든 서비스에 안심 보장제를 적용해요.</p></div>
+      <div style="padding:28px 22px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:#FBEEDB;margin-bottom:16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H11l-1 8.5L19.5 10H13z" stroke="#E08A2B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 6px;font-size:17px;font-weight:800;color:var(--ink);">신속</h3><p style="margin:0;font-size:14px;color:var(--muted-2);line-height:1.6;">평균 45분, 필요한 순간 바로 도착해요.</p></div>
+      <div style="padding:28px 22px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:#E9E7FA;margin-bottom:16px;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.3-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.7-7 10-7 10z" stroke="#7E76D6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><h3 style="margin:0 0 6px;font-size:17px;font-weight:800;color:var(--ink);">따뜻함</h3><p style="margin:0;font-size:14px;color:var(--muted-2);line-height:1.6;">이웃을 돕는 마음으로 한 번 더 챙겨요.</p></div>
+    </div>
+  </div>
+
+  <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:24px;padding:44px 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center;">
+    <div><div style="font-size:32px;font-weight:800;color:var(--primary);letter-spacing:-0.03em;">12만+</div><div style="font-size:14px;color:var(--muted-2);margin-top:5px;font-weight:600;">누적 도움 건수</div></div>
+    <div style="border-left:1px solid var(--line-2);"><div style="font-size:32px;font-weight:800;color:#E08A2B;letter-spacing:-0.03em;">4.9점</div><div style="font-size:14px;color:var(--muted-2);margin-top:5px;font-weight:600;">평균 만족도</div></div>
+    <div style="border-left:1px solid var(--line-2);"><div style="font-size:32px;font-weight:800;color:#3E8DD6;letter-spacing:-0.03em;">3,200명</div><div style="font-size:14px;color:var(--muted-2);margin-top:5px;font-weight:600;">검증된 매니저</div></div>
+    <div style="border-left:1px solid var(--line-2);"><div style="font-size:32px;font-weight:800;color:#7E76D6;letter-spacing:-0.03em;">15개 구</div><div style="font-size:14px;color:var(--muted-2);margin-top:5px;font-weight:600;">서비스 운영 지역</div></div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ ABOUT - CEO ============ -->
+<sc-if value="{{ isAboutCeo }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="CEO소개" style="animation:pageIn .4s ease;max-width:1000px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="text-align:center;margin-bottom:48px;"><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">CEO MESSAGE</span><h1 style="margin:12px 0 0;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);">대표가 전하는 이야기</h1></div>
+  <div style="display:grid;grid-template-columns:300px 1fr;gap:44px;align-items:start;">
+    <div style="position:sticky;top:96px;">
+      <div style="aspect-ratio:3/4;border-radius:24px;overflow:hidden;background:var(--grad);display:flex;align-items:flex-end;justify-content:center;position:relative;box-shadow:0 20px 48px rgba(var(--ring-rgb),0.24);">
+        <div style="position:absolute;top:20px;left:20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.14);"></div>
+        <span style="position:absolute;top:54px;left:50%;transform:translateX(-50%);width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;font-size:44px;font-weight:800;color:var(--primary);">도</span>
+        <div style="position:relative;width:100%;padding:18px 16px;text-align:center;background:linear-gradient(to top,rgba(0,0,0,0.28),transparent);"><div style="font-size:18px;font-weight:800;color:#fff;">김도윤</div><div style="font-size:13px;color:rgba(255,255,255,0.88);margin-top:2px;">다손 대표이사 / 공동창업자</div></div>
+      </div>
+      <div style="margin-top:18px;padding:18px;background:var(--surface);border:1px solid var(--line-2);border-radius:18px;">
+        <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:12px;">약력</div>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px;">
+          <li style="display:flex;gap:8px;font-size:13.5px;color:var(--muted);line-height:1.5;"><span style="color:var(--primary);font-weight:800;">·</span>前 사회혁신연구소 1인가구 정책 연구원</li>
+          <li style="display:flex;gap:8px;font-size:13.5px;color:var(--muted);line-height:1.5;"><span style="color:var(--primary);font-weight:800;">·</span>생활지원 플랫폼 다손 공동창업 (2023)</li>
+          <li style="display:flex;gap:8px;font-size:13.5px;color:var(--muted);line-height:1.5;"><span style="color:var(--primary);font-weight:800;">·</span>2024 소셜벤처 어워드 대상 수상</li>
+          <li style="display:flex;gap:8px;font-size:13.5px;color:var(--muted);line-height:1.5;"><span style="color:var(--primary);font-weight:800;">·</span>서울시 1인가구 지원 자문위원</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <h2 style="margin:0 0 22px;font-size:26px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;line-height:1.35;">“혼자 사는 일이 외롭지 않도록,<br>가장 가까운 곳에서 손을 내밀겠습니다.”</h2>
+      <div style="font-size:16px;line-height:1.9;color:var(--muted);">
+        <p style="margin:0 0 18px;">안녕하세요, 다손 대표 김도윤입니다.</p>
+        <p style="margin:0 0 18px;">저 역시 오랜 시간 혼자 살아오며 ‘이 일은 누가 좀 도와줬으면’ 싶은 순간을 수없이 만났습니다. 무거운 가구를 옮기다 다칠 뻔하기도 했고, 간단한 수리 하나에 반나절을 허비하기도 했습니다. 그때마다 생각했습니다. 누구나 손쉽게, 부담 없이 도움을 청할 수 있는 서비스가 있다면 어떨까.</p>
+        <p style="margin:0 0 18px;">다손은 그 질문에서 출발했습니다. 우리는 단순히 일을 대신하는 것을 넘어, 혼자 사는 사람이 일상에서 느끼는 막막함과 불안을 덜어드리고 싶습니다. 검증된 매니저, 투명한 가격, 그리고 이웃을 대하는 따뜻한 마음. 이 세 가지를 끝까지 지키겠습니다.</p>
+        <p style="margin:0 0 30px;">앞으로도 다손은 ‘혼자가 아니라는 든든함’을 가장 빠르고 정직하게 전하는 생활 파트너가 되겠습니다. 감사합니다.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding-top:24px;border-top:1px solid var(--line-2);"><span style="font-size:15px;color:var(--muted);">다손 대표이사</span><span style="font-size:20px;font-weight:800;color:var(--ink);letter-spacing:0.02em;">김도윤</span></div>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ SERVICE - ALL ============ -->
+<sc-if value="{{ isSvcAll }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="전체서비스" style="animation:pageIn .4s ease;max-width:1100px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="text-align:center;margin-bottom:52px;"><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">ALL SERVICES</span><h1 style="margin:12px 0 16px;font-size:clamp(30px,4vw,46px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);">필요한 모든 생활 도움, 전부 모았어요</h1><p style="margin:0 auto;max-width:560px;font-size:17px;line-height:1.7;color:var(--muted);">서비스를 고르면 바로 신청까지 이어져요. 가격은 기본 요금이며, 작업량에 따라 달라질 수 있어요.</p></div>
+  <div style="display:flex;flex-direction:column;gap:20px;">
+    <sc-for list="{{ serviceList }}" as="sv" hint-placeholder-count="5">
+      <div style="display:grid;grid-template-columns:64px 1fr auto;gap:22px;align-items:center;padding:28px 28px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;box-shadow:0 6px 18px rgba(38,42,46,0.04);">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:18px;background:{{ sv.tint }};">{{ sv.iconLg }}</span>
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;"><h3 style="margin:0;font-size:21px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">{{ sv.name }}</h3><span style="font-size:13px;font-weight:800;color:{{ sv.color }};background:{{ sv.tint }};padding:4px 10px;border-radius:999px;">{{ sv.price }}</span></div>
+          <p style="margin:8px 0 12px;font-size:14.5px;color:var(--muted);line-height:1.6;max-width:560px;">{{ sv.desc }}</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;"><sc-for list="{{ sv.includes }}" as="inc" hint-placeholder-count="3"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface-2);padding:6px 11px;border-radius:999px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17l9-10" stroke="{{ sv.color }}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ inc }}</span></sc-for></div>
+        </div>
+        <button onClick="{{ sv.onCardClick }}" style="padding:13px 22px;font-size:15px;font-weight:700;color:#fff;background:var(--primary);border-radius:13px;box-shadow:0 8px 20px rgba(var(--ring-rgb),0.28);transition:transform .15s ease;white-space:nowrap;" style-hover="transform:translateY(-2px);">신청하기</button>
+      </div>
+    </sc-for>
+  </div>
+  <div style="margin-top:40px;text-align:center;padding:40px 24px;background:var(--primary-tint);border-radius:24px;"><h3 style="margin:0 0 8px;font-size:22px;font-weight:800;color:var(--ink);">어떤 서비스가 필요한지 모르겠다면?</h3><p style="margin:0 0 20px;font-size:15px;color:var(--muted);">상담을 남겨주시면 딱 맞는 도움을 안내해 드릴게요.</p><button onClick="{{ go.comInquiry }}" style="padding:14px 26px;font-size:15px;font-weight:700;color:#fff;background:var(--primary);border-radius:13px;box-shadow:0 10px 24px rgba(var(--ring-rgb),0.3);">문의하기</button></div>
+</main>
+</sc-if>
+
+<!-- ============ SERVICE - HOW ============ -->
+<sc-if value="{{ isSvcHow }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="이용방법" style="animation:pageIn .4s ease;max-width:1000px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="text-align:center;margin-bottom:56px;"><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">HOW TO USE</span><h1 style="margin:12px 0 16px;font-size:clamp(30px,4vw,46px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);">신청부터 완료까지, 단 3단계</h1><p style="margin:0;font-size:17px;color:var(--muted);">가입 없이 1분이면 도움을 받을 수 있어요.</p></div>
+  <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:72px;">
+    <div style="display:flex;gap:24px;align-items:flex-start;padding:32px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;"><span style="flex-shrink:0;width:56px;height:56px;border-radius:50%;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--primary);">1</span><div><h3 style="margin:0 0 8px;font-size:21px;font-weight:800;color:var(--ink);">서비스 선택 &amp; 신청</h3><p style="margin:0;font-size:15.5px;color:var(--muted);line-height:1.7;">필요한 서비스를 고르고 방문 날짜·시간·주소를 입력해요. 요청사항을 적어두면 더 정확한 도움을 받을 수 있어요.</p></div></div>
+    <div style="display:flex;gap:24px;align-items:flex-start;padding:32px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;"><span style="flex-shrink:0;width:56px;height:56px;border-radius:50%;background:#FBEEDB;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#E08A2B;">2</span><div><h3 style="margin:0 0 8px;font-size:21px;font-weight:800;color:var(--ink);">매니저 매칭 &amp; 방문</h3><p style="margin:0;font-size:15.5px;color:var(--muted);line-height:1.7;">가까운 검증된 매니저가 1분 안에 매칭돼요. 실시간 위치와 예상 도착 시간을 확인하며 편하게 기다리면 됩니다.</p></div></div>
+    <div style="display:flex;gap:24px;align-items:flex-start;padding:32px;background:var(--surface);border:1px solid var(--line-2);border-radius:22px;"><span style="flex-shrink:0;width:56px;height:56px;border-radius:50%;background:#E0F1E8;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#2FA26B;">3</span><div><h3 style="margin:0 0 8px;font-size:21px;font-weight:800;color:var(--ink);">완료 &amp; 간편 결제</h3><p style="margin:0;font-size:15.5px;color:var(--muted);line-height:1.7;">작업이 끝나면 앱에서 카드·간편결제로 결제해요. 따뜻한 후기를 남기면 적립금도 드려요.</p></div></div>
+  </div>
+
+  <h2 style="margin:0 0 24px;font-size:26px;font-weight:800;letter-spacing:-0.03em;color:var(--ink);">자주 묻는 질문</h2>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <sc-for list="{{ faqList }}" as="f" hint-placeholder-count="5">
+      <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:16px;overflow:hidden;">
+        <button onClick="{{ f.onClick }}" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 22px;text-align:left;"><span style="font-size:16px;font-weight:700;color:var(--ink);">{{ f.q }}</span><span style="flex-shrink:0;transform:{{ f.iconRotate }};transition:transform .25s ease;color:var(--primary);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+        <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}"><div style="padding:0 22px 22px;font-size:15px;color:var(--muted);line-height:1.7;">{{ f.a }}</div></sc-if>
+      </div>
+    </sc-for>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ COMMUNITY - NOTICE ============ -->
+<sc-if value="{{ isComNotice }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="공지사항" style="animation:pageIn .4s ease;max-width:900px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="margin-bottom:40px;"><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">NOTICE</span><h1 style="margin:12px 0 8px;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);">공지사항</h1><p style="margin:0;font-size:16px;color:var(--muted);">다손의 새로운 소식과 이벤트를 확인하세요.</p></div>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <sc-for list="{{ noticeList }}" as="n" hint-placeholder-count="5">
+      <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:16px;overflow:hidden;">
+        <button onClick="{{ n.onClick }}" style="width:100%;display:flex;align-items:center;gap:14px;padding:20px 22px;text-align:left;">
+          <span style="flex-shrink:0;font-size:12px;font-weight:800;color:{{ n.catColor }};background:{{ n.catBg }};padding:5px 11px;border-radius:999px;">{{ n.cat }}</span>
+          <span style="flex:1;font-size:16px;font-weight:700;color:var(--ink);line-height:1.45;">{{ n.title }}</span>
+          <span style="flex-shrink:0;font-size:13px;color:var(--muted-2);">{{ n.date }}</span>
+          <span style="flex-shrink:0;transform:{{ n.iconRotate }};transition:transform .25s ease;color:var(--muted-2);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <sc-if value="{{ n.open }}" hint-placeholder-val="{{ false }}"><div style="padding:4px 22px 22px;font-size:15px;color:var(--muted);line-height:1.75;border-top:1px solid var(--line-3);margin-top:-2px;padding-top:18px;">{{ n.body }}</div></sc-if>
+      </div>
+    </sc-for>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ COMMUNITY - REVIEW ============ -->
+<sc-if value="{{ isComReview }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="이용후기" style="animation:pageIn .4s ease;max-width:1100px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="margin-bottom:36px;"><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">REVIEWS</span><h1 style="margin:12px 0 8px;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);">이용후기</h1><p style="margin:0;font-size:16px;color:var(--muted);">다손과 함께한 1인 가구의 진짜 이야기예요.</p></div>
+  <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;padding:28px 32px;background:var(--primary-tint);border-radius:22px;margin-bottom:32px;">
+    <div style="text-align:center;"><div style="font-size:48px;font-weight:800;color:var(--primary);line-height:1;letter-spacing:-0.03em;">4.9</div><div style="display:flex;gap:2px;justify-content:center;margin-top:8px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg><svg width="16" height="16" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z"/></svg></div><div style="font-size:13px;color:var(--muted);margin-top:8px;">총 8,420개 후기</div></div>
+    <div style="flex:1;min-width:240px;display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:13px;color:var(--muted);width:28px;">5점</span><div style="flex:1;height:8px;border-radius:999px;background:var(--surface);overflow:hidden;"><div style="width:88%;height:100%;background:var(--primary);"></div></div><span style="font-size:12px;color:var(--muted-2);width:34px;text-align:right;">88%</span></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:13px;color:var(--muted);width:28px;">4점</span><div style="flex:1;height:8px;border-radius:999px;background:var(--surface);overflow:hidden;"><div style="width:9%;height:100%;background:var(--primary);"></div></div><span style="font-size:12px;color:var(--muted-2);width:34px;text-align:right;">9%</span></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:13px;color:var(--muted);width:28px;">3점</span><div style="flex:1;height:8px;border-radius:999px;background:var(--surface);overflow:hidden;"><div style="width:2%;height:100%;background:var(--primary);"></div></div><span style="font-size:12px;color:var(--muted-2);width:34px;text-align:right;">2%</span></div>
+      <div style="display:flex;align-items:center;gap:10px;"><span style="font-size:13px;color:var(--muted);width:28px;">2점</span><div style="flex:1;height:8px;border-radius:999px;background:var(--surface);overflow:hidden;"><div style="width:1%;height:100%;background:var(--primary);"></div></div><span style="font-size:12px;color:var(--muted-2);width:34px;text-align:right;">1%</span></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:28px;">
+    <sc-for list="{{ filterChips }}" as="c" hint-placeholder-count="6"><button onClick="{{ c.onClick }}" style="padding:9px 16px;font-size:14px;font-weight:700;border-radius:999px;transition:all .15s ease;border:{{ c.border }};background:{{ c.bg }};color:{{ c.color }};">{{ c.label }}</button></sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;">
+    <sc-for list="{{ reviewCards }}" as="rv" hint-placeholder-count="6">
+      <div style="padding:26px;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;"><div style="display:flex;gap:2px;">{{ rv.stars }}</div><span style="padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700;color:{{ rv.color }};background:{{ rv.tint }};">{{ rv.tag }}</span></div>
+        <p style="margin:0;font-size:15px;line-height:1.65;color:var(--ink);font-weight:500;">“{{ rv.q }}”</p>
+        <div style="display:flex;align-items:center;gap:11px;margin-top:auto;padding-top:6px;"><span style="width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;background:{{ rv.color }};">{{ rv.initial }}</span><div><div style="font-size:14px;font-weight:700;color:var(--ink);">{{ rv.name }}</div><div style="font-size:12.5px;color:var(--muted-2);margin-top:1px;">{{ rv.meta }}</div></div></div>
+      </div>
+    </sc-for>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ COMMUNITY - INQUIRY ============ -->
+<sc-if value="{{ isComInquiry }}" hint-placeholder-val="{{ false }}">
+<main data-screen-label="문의하기" style="animation:pageIn .4s ease;max-width:1000px;margin:0 auto;padding:60px 24px 90px;">
+  <div style="text-align:center;margin-bottom:48px;"><span style="font-size:14px;font-weight:800;color:var(--primary);letter-spacing:0.04em;">CONTACT</span><h1 style="margin:12px 0 12px;font-size:clamp(28px,3.6vw,42px);font-weight:800;letter-spacing:-0.035em;color:var(--ink);">무엇이든 물어보세요</h1><p style="margin:0;font-size:16px;color:var(--muted);">궁금한 점을 남겨주시면 영업일 기준 1일 이내에 답변드릴게요.</p></div>
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;">
+    <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:24px;padding:32px;">
+      <sc-if value="{{ iqNotDone }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:20px;">
+          <div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px;">문의 유형</label><div style="display:flex;gap:8px;flex-wrap:wrap;"><sc-for list="{{ iqTypeList }}" as="ty" hint-placeholder-count="4"><button onClick="{{ ty.onClick }}" style="padding:10px 15px;font-size:13.5px;font-weight:700;border-radius:11px;transition:all .15s ease;border:{{ ty.border }};background:{{ ty.bg }};color:{{ ty.color }};">{{ ty.label }}</button></sc-for></div></div>
+          <div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">이름</label><input value="{{ iqName }}" onChange="{{ onIqName }}" placeholder="홍길동" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);transition:border .15s ease;" style-focus="border-color:var(--primary);"/></div>
+          <div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">연락처 또는 이메일</label><input value="{{ iqContact }}" onChange="{{ onIqContact }}" placeholder="010-1234-5678 / dason@example.com" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);transition:border .15s ease;" style-focus="border-color:var(--primary);"/></div>
+          <div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">문의 내용</label><textarea value="{{ iqMsg }}" onChange="{{ onIqMsg }}" placeholder="문의하실 내용을 자세히 적어주세요." rows="5" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);resize:none;transition:border .15s ease;" style-focus="border-color:var(--primary);"></textarea></div>
+          <button onClick="{{ submitInquiry }}" style="padding:16px;border-radius:14px;font-size:16px;font-weight:800;color:#fff;background:var(--primary);box-shadow:0 10px 24px rgba(var(--ring-rgb),0.3);transition:transform .15s ease;opacity:{{ iqOpacity }};pointer-events:{{ iqPointer }};" style-hover="transform:translateY(-2px);">문의 보내기</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{ iqDone }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:30px 10px;"><div style="width:76px;height:76px;border-radius:50%;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;animation:pulseRing 2s ease-out infinite;"><svg width="38" height="38" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17l9-10" stroke="var(--primary)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 style="margin:0 0 10px;font-size:22px;font-weight:800;color:var(--ink);">문의가 접수됐어요!</h3><p style="margin:0 0 24px;font-size:15px;color:var(--muted);line-height:1.6;">영업일 기준 1일 이내에<br>남겨주신 연락처로 답변드릴게요.</p><button onClick="{{ resetInquiry }}" style="padding:13px 24px;border-radius:13px;font-size:15px;font-weight:700;color:var(--muted);background:var(--surface-3);" style-hover="background:var(--line);">새 문의 작성</button></div>
+      </sc-if>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:18px;padding:22px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 5h18v14H3zM3 7l9 6 9-6" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:14px;font-weight:700;color:var(--ink);">이메일</span></div><div style="font-size:14px;color:var(--muted);">help@dason.co.kr</div></div>
+      <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:18px;padding:22px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:14px;font-weight:700;color:var(--ink);">고객센터</span></div><div style="font-size:14px;color:var(--muted);">1660-0000 (평일 09–18시)</div></div>
+      <div style="background:var(--surface);border:1px solid var(--line-2);border-radius:18px;padding:22px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 3C7 3 3 6.3 3 10.4c0 2.6 1.7 4.9 4.2 6.2L6.5 21l4.7-2.4c.3 0 .5.1.8.1 5 0 9-3.3 9-7.4S17 3 12 3z" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:14px;font-weight:700;color:var(--ink);">카카오 상담</span></div><div style="font-size:14px;color:var(--muted);">@다손 채널 검색</div></div>
+    </div>
+  </div>
+</main>
+</sc-if>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background:var(--footer-bg);color:#C4CDD4;">
+  <div style="max-width:1200px;margin:0 auto;padding:56px 24px 30px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;">
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:var(--grad);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 11.2 12 5l8 6.2V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z" fill="#fff"/></svg></span><span style="font-size:20px;font-weight:800;color:#fff;letter-spacing:-0.03em;white-space:nowrap;">다손</span></div>
+      <p style="margin:0;font-size:14px;line-height:1.7;color:#90999F;max-width:280px;">필요한 모든 순간의 손, 다손.<br>청년 1인 가구의 생활 도움 파트너.</p>
+    </div>
+    <div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;">회사소개</div><div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;"><button onClick="{{ go.aboutCompany }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">회사소개</button><button onClick="{{ go.aboutCeo }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">CEO 소개</button></div></div>
+    <div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;">서비스</div><div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;"><button onClick="{{ go.svcAll }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">전체 서비스</button><button onClick="{{ go.svcHow }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">이용방법</button></div></div>
+    <div><div style="font-size:13px;font-weight:700;color:#fff;margin-bottom:14px;">커뮤니티</div><div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;"><button onClick="{{ go.comNotice }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">공지사항</button><button onClick="{{ go.comReview }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">이용후기</button><button onClick="{{ go.comInquiry }}" style="font-size:14px;color:#90999F;" style-hover="color:#fff;">문의하기</button></div></div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.10);"><div style="max-width:1200px;margin:0 auto;padding:20px 24px;font-size:13px;color:#76808A;">© 2026 다손 (DASON). 본 사이트는 디자인 시안이며 모든 정보는 예시입니다.</div></div>
+</footer>
+
+<!-- FLOATING BUTTON -->
+<button onClick="{{ book.new }}" style="position:fixed;bottom:26px;right:26px;z-index:40;display:inline-flex;align-items:center;gap:9px;padding:16px 24px;font-size:16px;font-weight:800;color:#fff;background:var(--primary);border-radius:999px;box-shadow:0 14px 32px rgba(var(--ring-rgb),0.42);animation:pulseRing 2.4s ease-out infinite;transition:transform .15s ease;white-space:nowrap;" style-hover="transform:translateY(-3px);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg>도움 신청</button>
+
+<!-- BOOKING MODAL -->
+<sc-if value="{{ bookingOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ close }}" style="position:fixed;inset:0;z-index:100;background:rgba(15,18,20,0.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;animation:overlayIn .25s ease;">
+    <div onClick="{{ stopProp }}" style="width:100%;max-width:540px;max-height:92vh;overflow-y:auto;background:var(--surface);border-radius:26px;box-shadow:0 30px 80px rgba(0,0,0,0.45);animation:modalIn .3s cubic-bezier(.2,.7,.2,1);">
+      <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:26px 28px 16px;border-bottom:1px solid var(--line-3);position:sticky;top:0;background:var(--surface);border-radius:26px 26px 0 0;z-index:2;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;"><div><h3 style="margin:0 0 5px;font-size:21px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">{{ stepTitle }}</h3><p style="margin:0;font-size:14px;color:var(--muted-2);">{{ stepSub }}</p></div><button onClick="{{ close }}" style="flex-shrink:0;width:36px;height:36px;border-radius:50%;background:var(--surface-3);display:flex;align-items:center;justify-content:center;color:var(--muted);" style-hover="background:var(--line);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button></div>
+          <div style="display:flex;gap:6px;margin-top:18px;"><sc-for list="{{ progress }}" as="p" hint-placeholder-count="4"><span style="height:6px;border-radius:999px;transition:all .35s ease;width:{{ p.w }};background:{{ p.bg }};"></span></sc-for></div>
+        </div>
+        <div style="padding:24px 28px 8px;">
+          <sc-if value="{{ isStep0 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:11px;"><sc-for list="{{ serviceList }}" as="sv" hint-placeholder-count="5"><button onClick="{{ sv.onSelectTile }}" style="display:flex;align-items:center;gap:14px;padding:15px 16px;border-radius:16px;text-align:left;transition:all .15s ease;border:{{ sv.tileBorder }};background:{{ sv.tileBg }};box-shadow:{{ sv.tileShadow }};"><span style="display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:13px;flex-shrink:0;background:{{ sv.tint }};">{{ sv.iconSm }}</span><div style="flex:1;"><div style="font-size:16px;font-weight:700;color:var(--ink);">{{ sv.name }}</div><div style="font-size:13px;color:var(--muted-2);margin-top:2px;">{{ sv.tagline }}</div></div><span style="font-size:14px;font-weight:800;color:{{ sv.color }};">{{ sv.price }}</span></button></sc-for></div></sc-if>
+          <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}"><div><div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;">방문 날짜</div><div style="display:flex;gap:9px;overflow-x:auto;padding-bottom:8px;margin-bottom:24px;"><sc-for list="{{ dates }}" as="d" hint-placeholder-count="7"><button onClick="{{ d.onClick }}" style="flex:0 0 auto;width:62px;padding:12px 0;border-radius:14px;text-align:center;transition:all .15s ease;border:{{ d.chipBorder }};background:{{ d.chipBg }};color:{{ d.chipColor }};"><div style="font-size:12px;font-weight:600;opacity:0.7;">{{ d.weekday }}</div><div style="font-size:19px;font-weight:800;margin-top:3px;">{{ d.day }}</div><div style="font-size:11px;font-weight:700;margin-top:3px;height:13px;">{{ d.label }}</div></button></sc-for></div><div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:12px;">방문 시간</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;"><sc-for list="{{ times }}" as="t" hint-placeholder-count="6"><button onClick="{{ t.onClick }}" style="padding:13px 0;border-radius:13px;font-size:14px;font-weight:700;transition:all .15s ease;border:{{ t.chipBorder }};background:{{ t.chipBg }};color:{{ t.chipColor }};">{{ t.label }}</button></sc-for></div></div></sc-if>
+          <sc-if value="{{ isStep2 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:18px;"><div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">방문 주소</label><input value="{{ addr }}" onChange="{{ onAddr }}" placeholder="예) 서울시 마포구 와우산로 12" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);transition:border .15s ease;" style-focus="border-color:var(--primary);"/></div><div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">상세 주소 <span style="color:var(--muted-2);font-weight:500;">(선택)</span></label><input value="{{ addr2 }}" onChange="{{ onAddr2 }}" placeholder="예) 302호, 공동현관 #1234" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);transition:border .15s ease;" style-focus="border-color:var(--primary);"/></div><div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">연락처</label><input value="{{ phone }}" onChange="{{ onPhone }}" placeholder="예) 010-1234-5678" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);transition:border .15s ease;" style-focus="border-color:var(--primary);"/></div><div><label style="display:block;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;">요청사항 <span style="color:var(--muted-2);font-weight:500;">(선택)</span></label><textarea value="{{ note }}" onChange="{{ onNote }}" placeholder="예) 전구 2개 교체, 사다리 필요해요" rows="3" style="width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:12px;font-size:15px;outline:none;color:var(--ink);background:var(--input-bg);resize:none;transition:border .15s ease;" style-focus="border-color:var(--primary);"></textarea></div></div></sc-if>
+          <sc-if value="{{ isStep3 }}" hint-placeholder-val="{{ false }}"><div style="border:1px solid var(--line-2);border-radius:18px;overflow:hidden;"><div style="display:flex;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line-3);"><span style="font-size:14px;color:var(--muted-2);">서비스</span><span style="font-size:15px;font-weight:700;color:{{ summaryServiceColor }};">{{ summaryServiceName }}</span></div><div style="display:flex;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line-3);"><span style="font-size:14px;color:var(--muted-2);">방문 일정</span><span style="font-size:15px;font-weight:700;color:var(--ink);">{{ summaryDate }} {{ summaryTime }}</span></div><div style="display:flex;justify-content:space-between;gap:14px;padding:16px 18px;border-bottom:1px solid var(--line-3);"><span style="font-size:14px;color:var(--muted-2);flex-shrink:0;">주소</span><span style="font-size:15px;font-weight:700;color:var(--ink);text-align:right;">{{ summaryAddr }}</span></div><div style="display:flex;justify-content:space-between;padding:16px 18px;"><span style="font-size:14px;color:var(--muted-2);">연락처</span><span style="font-size:15px;font-weight:700;color:var(--ink);">{{ summaryPhone }}</span></div><div style="display:flex;justify-content:space-between;align-items:center;padding:16px 18px;background:var(--primary-tint);"><span style="font-size:14px;font-weight:700;color:var(--ink);">예상 금액</span><span style="font-size:18px;font-weight:800;color:var(--primary-strong);">{{ summaryServicePrice }}</span></div></div><p style="margin:14px 2px 0;font-size:12.5px;color:var(--muted-2);line-height:1.5;">신청 완료 시 가까운 매니저에게 자동으로 매칭 요청이 전송됩니다. 최종 금액은 작업 내용에 따라 달라질 수 있어요.</p></sc-if>
+        </div>
+        <div style="display:flex;gap:10px;padding:16px 28px 26px;position:sticky;bottom:0;background:var(--surface);"><sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ prev }}" style="padding:15px 22px;border-radius:14px;font-size:15px;font-weight:700;color:var(--muted);background:var(--surface-3);flex-shrink:0;" style-hover="background:var(--line);">이전</button></sc-if><button onClick="{{ next }}" style="flex:1;padding:15px;border-radius:14px;font-size:16px;font-weight:800;color:#fff;background:var(--primary);box-shadow:0 10px 24px rgba(var(--ring-rgb),0.32);transition:transform .15s ease;opacity:{{ nextOpacity }};pointer-events:{{ nextPointer }};" style-hover="transform:translateY(-2px);">{{ nextLabel }}</button></div>
+      </sc-if>
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ false }}"><div style="padding:48px 36px;text-align:center;"><div style="width:84px;height:84px;border-radius:50%;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;margin:0 auto 22px;animation:pulseRing 2s ease-out infinite;"><svg width="42" height="42" viewBox="0 0 24 24" fill="none"><path d="M5 12.5 10 17l9-10" stroke="var(--primary)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3 style="margin:0 0 10px;font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-0.02em;">도움 신청이 완료됐어요!</h3><p style="margin:0 0 24px;font-size:15px;color:var(--muted);line-height:1.6;">가까운 <b style="color:var(--ink);">{{ summaryServiceName }}</b> 매니저를 찾고 있어요.<br>매칭이 완료되면 알림으로 알려드릴게요.</p><div style="display:inline-flex;align-items:center;gap:9px;padding:12px 18px;background:var(--surface-2);border-radius:14px;margin-bottom:26px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--secondary);box-shadow:0 0 0 4px rgba(var(--ring-rgb),0.18);"></span><span style="font-size:14px;font-weight:700;color:var(--ink);">매니저 매칭 중...</span></div><div style="display:flex;gap:10px;"><button onClick="{{ reset }}" style="flex:1;padding:14px;border-radius:14px;font-size:15px;font-weight:700;color:var(--muted);background:var(--surface-3);" style-hover="background:var(--line);">새 도움 신청</button><button onClick="{{ close }}" style="flex:1;padding:14px;border-radius:14px;font-size:15px;font-weight:800;color:#fff;background:var(--primary);" style-hover="background:var(--primary-strong);">확인</button></div></div></sc-if>
+    </div>
+  </div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    page:'home', openMenu:null,
+    bookingOpen:false, step:0, service:null, date:null, time:null, addr:'', addr2:'', phone:'', note:'', done:false, reviewIndex:0,
+    openNotice:-1, openFaq:0, reviewFilter:'전체',
+    iqName:'', iqContact:'', iqType:'서비스 이용 문의', iqMsg:'', iqDone:false,
+    theme:'green', mode:'light',
+  };
+
+  weekdays = ['일','월','화','수','목','금','토'];
+  timesData = ['오전 9시','오전 11시','오후 1시','오후 3시','오후 5시','오후 7시'];
+  iqTypes = ['서비스 이용 문의','매니저 지원 문의','제휴·협업 문의','기타 문의'];
+
+  themes = {
+    green:  { label:'그린', primary:'#1FA46A', strong:'#15784E', tint:'#E2F3EA', secondary:'#5BC08C', ring:'31,164,106',  grad:'linear-gradient(135deg,#1FA46A 0%,#5BC08C 100%)' },
+    blue:   { label:'블루', primary:'#2E7DF0', strong:'#1B5FCB', tint:'#E4EDFE', secondary:'#6FA8FF', ring:'46,125,240',  grad:'linear-gradient(135deg,#2E7DF0 0%,#6FA8FF 100%)' },
+    sunset: { label:'선셋', primary:'#F97A3D', strong:'#D85E1C', tint:'#FFE9D8', secondary:'#FFC24D', ring:'249,122,61',  grad:'linear-gradient(135deg,#F97A3D 0%,#FFC24D 100%)' },
+  };
+  modes = {
+    light: { '--bg':'#FBF7EF', '--surface':'#FFFFFF', '--surface-2':'#F6F1E8', '--surface-3':'#F1ECE2', '--input-bg':'#FAF6EE', '--ink':'#262A2E', '--muted':'#606A6E', '--muted-2':'#8B9398', '--line':'#E7E0D5', '--line-2':'#EFE8DD', '--line-3':'#F3EDE3', '--footer-bg':'#20262B' },
+    dark:  { '--bg':'#14181B', '--surface':'#1E242A', '--surface-2':'#191F24', '--surface-3':'#28303A', '--input-bg':'#232B32', '--ink':'#ECF1F3', '--muted':'#A6B0B6', '--muted-2':'#7B868D', '--line':'#2D353D', '--line-2':'#252C33', '--line-3':'#20262C', '--footer-bg':'#0E1316' },
+  };
+
+  componentDidMount(){
+    const st = (k)=>{ try{ return localStorage.getItem(k); }catch(e){ return null; } };
+    const t = st('dason-theme'); const m = st('dason-mode');
+    const theme = this.themes[t] ? t : 'green';
+    const mode = (m==='dark'||m==='light') ? m : 'light';
+    this.setState({ theme, mode });
+    this.applyVars(theme, mode);
+    this._onScroll = () => { if(this._header){ this._header.style.boxShadow = window.scrollY > 16 ? '0 8px 30px rgba(38,42,46,0.10)' : 'none'; } };
+    window.addEventListener('scroll', this._onScroll); this._onScroll();
+    this.setupReveal();
+    this._rev = setInterval(()=> this.setState(s=>({ reviewIndex:(s.reviewIndex+1)%4 })), 5500);
+  }
+  componentDidUpdate(prev){ if(prev.page!==this.state.page){ this.setupReveal(); } }
+  componentWillUnmount(){ window.removeEventListener('scroll', this._onScroll); if(this._io) this._io.disconnect(); if(this._rev) clearInterval(this._rev); }
+
+  setupReveal(){
+    if(this._io) this._io.disconnect();
+    this._io = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='none'; this._io.unobserve(e.target); } }); }, { threshold:0.12 });
+    requestAnimationFrame(()=>{ const scope=this._root||document; scope.querySelectorAll('[data-reveal]').forEach(el=>{ el.style.opacity='0'; el.style.transform='translateY(26px)'; el.style.transition='opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)'; this._io.observe(el); }); });
+  }
+
+  applyVars(theme, mode){
+    const root = (typeof document!=='undefined') ? document.documentElement : null; if(!root) return;
+    const t = this.themes[theme] || this.themes.green;
+    const m = this.modes[mode] || this.modes.light;
+    const set=(k,v)=>root.style.setProperty(k,v);
+    set('--primary',t.primary); set('--primary-strong',t.strong); set('--primary-tint',t.tint);
+    set('--secondary',t.secondary); set('--grad',t.grad); set('--ring-rgb',t.ring);
+    Object.keys(m).forEach(k=>set(k,m[k]));
+  }
+  setTheme(id){ this.applyVars(id, this.state.mode); try{ localStorage.setItem('dason-theme', id); }catch(e){} this.setState({ theme:id }); }
+  toggleMode(){ const next = this.state.mode==='dark'?'light':'dark'; this.applyVars(this.state.theme, next); try{ localStorage.setItem('dason-mode', next); }catch(e){} this.setState({ mode:next }); }
+
+  navTo(p){ this.setState({ page:p, openMenu:null }); if(typeof window!=='undefined') window.scrollTo(0,0); }
+  setMenu(k){ this.setState({ openMenu:k }); }
+
+  get serviceData(){ return [
+    { id:'repair',   name:'집수리',          tagline:'전구·수전 교체, 못 박기, 간단 수리까지', price:'15,000원~', color:'#E08A2B', tint:'#FBEEDB', iconPath:'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-2.4 2.6-2.6z', desc:'전구·형광등 교체, 수전·샤워헤드 설치, 못·선반 고정, 실리콘 보수까지. 집안의 자잘한 수리를 한 번에 해결해요.', includes:['전구·콘센트·스위치','수전·샤워기 설치','선반·액자 고정'] },
+    { id:'assemble', name:'가구 조립·설치',  tagline:'침대·책상·선반, 박스째 와도 OK',        price:'25,000원~', color:'#3E8DD6', tint:'#E3EFFA', iconPath:'M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8', desc:'이케아부터 온라인 가구까지, 박스만 두면 매니저가 조립하고 자리까지 잡아드려요. 폐박스 정리도 함께.', includes:['침대·책상·옷장 조립','TV·선반 벽 설치','폐박스 정리'] },
+    { id:'move',     name:'무거운 짐·이사 도움', tagline:'혼자 못 드는 짐, 든든하게 같이',     price:'30,000원~', color:'#E2683F', tint:'#FBE7DE', iconPath:'M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4z', desc:'원룸 이사, 1톤 소형 이사, 무거운 가전·가구 옮기기까지. 혼자서는 엄두가 안 나는 짐을 함께 들어요.', includes:['원룸·소형 이사','가전·가구 이동','짐 정리·재배치'] },
+    { id:'grocery',  name:'장보기 대행',      tagline:'무거운 생수·쌀, 문 앞까지 척척',        price:'9,900원~',  color:'#2FA26B', tint:'#E0F1E8', iconPath:'M3 4h2l2.2 11.4a1 1 0 0 0 1 .8h9.1a1 1 0 0 0 1-.8L20.5 8H6M9.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17.5 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2z', desc:'생수·쌀·세제처럼 무겁고 부피 큰 장보기를 대신해요. 장본 물건은 정리까지 도와드려요.', includes:['대형마트 구매','무거운 생수·쌀','구매 물품 정리'] },
+    { id:'pet',      name:'반려동물 돌봄',    tagline:'산책·밥·놀이, 사진 리포트는 덤',        price:'19,000원~', color:'#7E76D6', tint:'#E9E7FA', iconPath:'M12 13c-2 0-3.7 1.6-3.7 3.4 0 1.1.9 1.7 1.8 1.7.7 0 1.1-.4 1.9-.4s1.2.4 1.9.4c.9 0 1.8-.6 1.8-1.7 0-1.8-1.7-3.4-3.7-3.4zM6.5 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 11a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM9.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM14.5 8.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', desc:'출장·야근으로 자리를 비울 때, 산책·사료·놀이를 책임지고 사진 리포트로 안심시켜 드려요.', includes:['산책·배변 케어','사료·물 급여','사진 리포트'] },
+  ]; }
+
+  get reviews(){ return [
+    { q:'혼자 옮기기 막막했던 냉장고를 단 30분 만에 옮겨주셨어요. 정말 곁에 누가 있는 느낌이었어요.', name:'김서윤', meta:'27세 · 원룸 거주', tag:'무거운 짐·이사', color:'#E2683F', tint:'#FBE7DE', initial:'김', rating:5 },
+    { q:'전구 하나 갈려고 사다리 사야 하나 고민하다 다손을 알게 됐어요. 이제 집안일은 다 맡겨요.', name:'이준호', meta:'31세 · 오피스텔', tag:'집수리', color:'#E08A2B', tint:'#FBEEDB', initial:'이', rating:5 },
+    { q:'야근하는 날 강아지 산책시켜 주시고 사진 리포트까지 보내주셔서 하루 종일 안심했어요.', name:'박지민', meta:'24세 · 1인 가구', tag:'반려동물 돌봄', color:'#7E76D6', tint:'#E9E7FA', initial:'박', rating:5 },
+    { q:'이케아 침대 2시간 걸릴 줄 알았는데 30분 컷이었어요. 매니저님 친절은 덤이었습니다.', name:'정하늘', meta:'29세 · 자취 3년차', tag:'가구 조립', color:'#3E8DD6', tint:'#E3EFFA', initial:'정', rating:5 },
+    { q:'퇴근길 장보기가 늘 부담이었는데 무거운 생수까지 정리해주셔서 너무 편해졌어요.', name:'최민서', meta:'26세 · 직장인', tag:'장보기', color:'#2FA26B', tint:'#E0F1E8', initial:'최', rating:4 },
+    { q:'비데 설치 직접 하려다 포기했는데 20분 만에 끝. 마무리까지 깔끔하게 해주셨어요.', name:'한지우', meta:'33세 · 원룸 거주', tag:'집수리', color:'#E08A2B', tint:'#FBEEDB', initial:'한', rating:5 },
+    { q:'원룸 이사 혼자서는 못 할 뻔했는데 짐 옮기고 배치까지. 이사 스트레스가 제로였어요.', name:'오세나', meta:'28세 · 오피스텔', tag:'무거운 짐·이사', color:'#E2683F', tint:'#FBE7DE', initial:'오', rating:5 },
+    { q:'책장 두 개 조립을 30분 컷으로 끝내주시고 폐박스까지 가져가주셔서 깔끔했어요.', name:'윤도현', meta:'25세 · 자취 1년차', tag:'가구 조립', color:'#3E8DD6', tint:'#E3EFFA', initial:'윤', rating:4 },
+  ]; }
+
+  get notices(){ return [
+    { date:'2026.06.10', cat:'이벤트', title:'첫 이용 고객 대상 20% 할인 프로모션 안내', body:'다손을 처음 이용하시는 고객님께 모든 서비스 20% 할인을 제공합니다. 6월 한 달간 별도 코드 없이 자동 적용되며, 다른 쿠폰과 중복 사용은 어렵습니다. 자세한 내용은 앱 내 이벤트 페이지에서 확인하세요.' },
+    { date:'2026.05.28', cat:'서비스', title:'반려동물 돌봄 서비스 정식 출시', body:'베타 운영을 마치고 반려동물 돌봄 서비스가 정식 출시되었습니다. 산책·급여·놀이 케어를 사진 리포트와 함께 제공하며, 출장·야근으로 자리를 비우는 1인 가구를 위해 시간 단위로 신청할 수 있습니다.' },
+    { date:'2026.05.15', cat:'공지', title:'개인정보 처리방침 개정 안내', body:'2026년 6월 1일부로 개인정보 처리방침이 일부 개정됩니다. 주요 변경 사항은 위치정보 보관 기간과 제3자 제공 항목입니다. 변경된 방침은 시행일부터 효력이 발생합니다.' },
+    { date:'2026.04.30', cat:'서비스', title:'심야 시간대(22~24시) 서비스 확대 운영', body:'바쁜 직장인을 위해 심야 시간대 서비스를 마포·관악·강남 등 일부 지역에서 확대 운영합니다. 심야 시간 신청 시 소정의 할증이 적용될 수 있습니다.' },
+    { date:'2026.04.12', cat:'점검', title:'앱 정기 점검 안내 (4/14 02~04시)', body:'보다 안정적인 서비스를 위해 정기 점검을 진행합니다. 점검 시간 동안에는 신청·결제 기능 이용이 일시 중단되오니 양해 부탁드립니다.' },
+    { date:'2026.03.20', cat:'이벤트', title:'후기 작성 시 5,000원 적립금 지급', body:'서비스 이용 후 사진과 함께 후기를 남겨주시면 적립금 5,000원을 드립니다. 적립금은 다음 이용 시 현금처럼 사용할 수 있어요.' },
+  ]; }
+
+  get faqs(){ return [
+    { q:'서비스 신청은 어떻게 하나요?', a:'상단 ‘도움 신청’ 버튼을 눌러 서비스·일정·주소를 입력하면 1분 만에 신청이 완료돼요. 별도의 회원가입은 필요하지 않습니다.' },
+    { q:'결제는 언제, 어떻게 하나요?', a:'작업이 끝난 뒤 앱에서 카드·간편결제로 진행됩니다. 예상 금액은 신청 단계에서 미리 확인할 수 있어요.' },
+    { q:'매니저는 믿을 수 있나요?', a:'모든 매니저는 신원 확인과 서비스 교육을 거친 분들이며, 이용 후 평점·후기로 지속 관리됩니다.' },
+    { q:'예약을 변경하거나 취소할 수 있나요?', a:'방문 2시간 전까지는 앱에서 무료로 변경·취소할 수 있어요. 이후에는 일부 수수료가 발생할 수 있습니다.' },
+    { q:'서비스 가능 지역은 어디인가요?', a:'현재 서울 전역과 수도권 주요 지역에서 운영 중이며, 점차 확대하고 있어요.' },
+  ]; }
+
+  open(id){ this.setState({ bookingOpen:true, service:id||null, step:id?1:0, done:false }); }
+  close(){ this.setState({ bookingOpen:false }); }
+  next(){ const {step}=this.state; if(step<3) this.setState({step:step+1}); else this.setState({done:true}); }
+  prev(){ const {step}=this.state; if(step>0) this.setState({step:step-1}); }
+  reset(){ this.setState({ step:0, service:null, date:null, time:null, addr:'', addr2:'', phone:'', note:'', done:false }); }
+
+  icon(path,color,size){ return React.createElement('svg',{width:size,height:size,viewBox:'0 0 24 24',fill:'none'},React.createElement('path',{d:path,stroke:color,strokeWidth:2,strokeLinecap:'round',strokeLinejoin:'round'})); }
+  starRow(n){ const arr=[]; for(let i=0;i<5;i++){ arr.push(React.createElement('svg',{key:i,width:15,height:15,viewBox:'0 0 24 24',fill: i<n ? '#F4B400':'#D9D2C6'}, React.createElement('path',{d:'M12 2l2.9 6.3 6.9.6-5.2 4.6 1.6 6.8L12 17.4 5.8 20.9l1.6-6.8L2.2 8.9l6.9-.6z'}))); } return React.createElement('div',{style:{display:'flex',gap:'2px'}},arr); }
+
+  computeDates(){ const out=[]; const now=new Date(); for(let i=0;i<10;i++){ const d=new Date(now); d.setDate(now.getDate()+i); out.push({ key:i, day:d.getDate(), month:d.getMonth()+1, weekday:this.weekdays[d.getDay()], label: i===0?'오늘': i===1?'내일':'' }); } return out; }
+
+  renderVals(){
+    const s = this.state;
+    const unselBorder='1px solid var(--line)', unselBg='var(--surface)', unselColor='var(--ink)';
+    const selBorder='2px solid var(--primary)', selBg='var(--primary-tint)', selColor='var(--primary-strong)';
+    const grp = s.page.indexOf('about')===0 ? 'about' : (s.page.indexOf('svc')===0 ? 'service' : (s.page.indexOf('com')===0 ? 'community' : 'home'));
+
+    const serviceList = this.serviceData.map(sv=>{
+      const on = s.service===sv.id;
+      return { id:sv.id, name:sv.name, tagline:sv.tagline, price:sv.price, color:sv.color, tint:sv.tint, desc:sv.desc, includes:sv.includes,
+        icon:this.icon(sv.iconPath,sv.color,28), iconSm:this.icon(sv.iconPath,sv.color,22), iconLg:this.icon(sv.iconPath,sv.color,32),
+        onCardClick:()=>this.open(sv.id), onSelectTile:()=>this.setState({service:sv.id, step:1}),
+        tileBorder: on?selBorder:unselBorder, tileBg: on?'var(--primary-tint)':'var(--surface)', tileShadow: on?'0 0 0 3px rgba(var(--ring-rgb),0.15)':'none' };
+    });
+
+    const dates = this.computeDates().map(d=>{ const on=s.date===d.key; return { ...d, onClick:()=>this.setState({date:d.key}), chipBorder:on?selBorder:unselBorder, chipBg:on?selBg:unselBg, chipColor:on?selColor:unselColor }; });
+    const times = this.timesData.map(t=>{ const on=s.time===t; return { label:t, onClick:()=>this.setState({time:t}), chipBorder:on?selBorder:unselBorder, chipBg:on?selBg:unselBg, chipColor:on?selColor:unselColor }; });
+
+    let nextDisabled=false;
+    if(s.step===0) nextDisabled=!s.service;
+    else if(s.step===1) nextDisabled=!(s.date!==null && s.time);
+    else if(s.step===2) nextDisabled=!(s.addr.trim() && s.phone.trim());
+    const svObj = this.serviceData.find(x=>x.id===s.service)||null;
+    const dObj = this.computeDates().find(d=>d.key===s.date);
+
+    const progress = [0,1,2,3].map(i=>({ w: i<=s.step?(i===s.step?'34px':'18px'):'18px', bg: i<=s.step?'var(--primary)':'var(--line)' }));
+    const homeReviewList = this.reviews.slice(0,4);
+    const revDots = homeReviewList.map((_,i)=>({ onClick:()=>this.setState({reviewIndex:i}), w: i===s.reviewIndex?'22px':'8px', bg: i===s.reviewIndex?'var(--primary)':'var(--line)' }));
+
+    const catStyle = (cat)=>{ if(cat==='이벤트') return {c:'var(--primary-strong)',b:'var(--primary-tint)'}; if(cat==='점검') return {c:'#D85E1C',b:'#FBE7DE'}; if(cat==='서비스') return {c:'#3E8DD6',b:'#E3EFFA'}; return {c:'var(--muted)',b:'var(--surface-2)'}; };
+    const noticeList = this.notices.map((n,i)=>{ const open=s.openNotice===i; const cs=catStyle(n.cat); return { ...n, open, onClick:()=>this.setState({openNotice: open?-1:i}), iconRotate: open?'rotate(180deg)':'rotate(0deg)', catColor:cs.c, catBg:cs.b }; });
+    const faqList = this.faqs.map((f,i)=>{ const open=s.openFaq===i; return { ...f, open, onClick:()=>this.setState({openFaq: open?-1:i}), iconRotate: open?'rotate(180deg)':'rotate(0deg)' }; });
+
+    const filters = ['전체','집수리','가구 조립','무거운 짐·이사','장보기','반려동물 돌봄'];
+    const filterChips = filters.map(f=>{ const on=s.reviewFilter===f; return { label:f, onClick:()=>this.setState({reviewFilter:f}), border:on?selBorder:unselBorder, bg:on?selBg:unselBg, color:on?selColor:unselColor }; });
+    const reviewCards = this.reviews.filter(r=> s.reviewFilter==='전체' || r.tag===s.reviewFilter).map(r=>({ ...r, stars:this.starRow(r.rating) }));
+
+    const iqTypeList = this.iqTypes.map(t=>{ const on=s.iqType===t; return { label:t, onClick:()=>this.setState({iqType:t}), border:on?selBorder:unselBorder, bg:on?selBg:unselBg, color:on?selColor:unselColor }; });
+    const iqDisabled = !(s.iqName.trim() && s.iqContact.trim() && s.iqMsg.trim());
+
+    const themeSwatches = Object.keys(this.themes).map(id=>{ const t=this.themes[id]; const active=s.theme===id; return { id, label:t.label, grad:t.grad, onClick:()=>this.setTheme(id), ring: active?`0 0 0 2px var(--surface), 0 0 0 4px ${t.primary}`:'0 0 0 1px rgba(0,0,0,0.06)' }; });
+
+    return {
+      headerRef:(el)=>{this._header=el;}, rootRef:(el)=>{this._root=el; this.applyVars(this.state.theme, this.state.mode);},
+      go:{ home:()=>this.navTo('home'), aboutCompany:()=>this.navTo('about-company'), aboutCeo:()=>this.navTo('about-ceo'), svcAll:()=>this.navTo('svc-all'), svcHow:()=>this.navTo('svc-how'), comNotice:()=>this.navTo('com-notice'), comReview:()=>this.navTo('com-review'), comInquiry:()=>this.navTo('com-inquiry'), enterAbout:()=>this.setMenu('about'), enterSvc:()=>this.setMenu('service'), enterCom:()=>this.setMenu('community'), leaveMenu:()=>this.setMenu(null) },
+      isHome:s.page==='home', isAboutCompany:s.page==='about-company', isAboutCeo:s.page==='about-ceo', isSvcAll:s.page==='svc-all', isSvcHow:s.page==='svc-how', isComNotice:s.page==='com-notice', isComReview:s.page==='com-review', isComInquiry:s.page==='com-inquiry',
+      aboutColor: grp==='about'?'var(--primary)':'var(--ink)', svcColor: grp==='service'?'var(--primary)':'var(--ink)', comColor: grp==='community'?'var(--primary)':'var(--ink)',
+      aboutMenuOpen:s.openMenu==='about', svcMenuOpen:s.openMenu==='service', comMenuOpen:s.openMenu==='community',
+      themeSwatches, toggleMode:()=>this.toggleMode(), isDark:s.mode==='dark', isLight:s.mode!=='dark',
+      book:{ new:()=>this.open(null) },
+      bookingOpen:s.bookingOpen, notDone:!s.done, done:s.done,
+      isStep0:s.step===0, isStep1:s.step===1, isStep2:s.step===2, isStep3:s.step===3, showBack:s.step>0,
+      close:()=>this.close(), next:()=>this.next(), prev:()=>this.prev(), reset:()=>this.reset(), stopProp:(e)=>e.stopPropagation(),
+      serviceList, dates, times,
+      nextLabel: s.step===3?'도움 신청 완료하기':'다음', nextOpacity: nextDisabled?'0.4':'1', nextPointer: nextDisabled?'none':'auto',
+      addr:s.addr, addr2:s.addr2, phone:s.phone, note:s.note,
+      onAddr:(e)=>this.setState({addr:e.target.value}), onAddr2:(e)=>this.setState({addr2:e.target.value}), onPhone:(e)=>this.setState({phone:e.target.value}), onNote:(e)=>this.setState({note:e.target.value}),
+      stepTitle:['어떤 도움이 필요하세요?','언제 방문할까요?','어디로 갈까요?','신청 내용을 확인해 주세요'][s.step],
+      stepSub:['필요한 서비스를 선택해 주세요','원하는 날짜와 시간을 골라주세요','방문 주소와 연락처를 알려주세요','내용을 확인하고 신청을 완료하세요'][s.step],
+      summaryServiceName: svObj?svObj.name:'-', summaryServicePrice: svObj?svObj.price:'-', summaryServiceColor: svObj?svObj.color:'var(--primary)',
+      summaryDate: dObj?`${dObj.month}월 ${dObj.day}일 (${dObj.weekday})`:'-', summaryTime:s.time||'', summaryPhone:s.phone||'-', summaryAddr: s.addr?(s.addr+(s.addr2?(' '+s.addr2):'')):'-',
+      progress, homeReviewList, trackTransform:`translateX(-${s.reviewIndex*100}%)`, revDots,
+      nextReview:()=>this.setState(st=>({reviewIndex:(st.reviewIndex+1)%4})), prevReview:()=>this.setState(st=>({reviewIndex:(st.reviewIndex-1+4)%4})),
+      noticeList, faqList, filterChips, reviewCards,
+      iqTypeList, iqName:s.iqName, iqContact:s.iqContact, iqMsg:s.iqMsg, iqNotDone:!s.iqDone, iqDone:s.iqDone,
+      onIqName:(e)=>this.setState({iqName:e.target.value}), onIqContact:(e)=>this.setState({iqContact:e.target.value}), onIqMsg:(e)=>this.setState({iqMsg:e.target.value}),
+      iqOpacity: iqDisabled?'0.4':'1', iqPointer: iqDisabled?'none':'auto',
+      submitInquiry:()=>this.setState({iqDone:true}), resetInquiry:()=>this.setState({iqDone:false, iqName:'', iqContact:'', iqMsg:'', iqType:'서비스 이용 문의'}),
+    };
+  }
+}
+</script>
+</body>
+</html>
