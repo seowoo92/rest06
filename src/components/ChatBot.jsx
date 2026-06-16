@@ -385,6 +385,38 @@ export default function ChatBot() {
 
       {/* ── Toggle button ── */}
       <div style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 1001 }}>
+
+        {/* Speech bubble tooltip */}
+        {!isOpen && (
+          <div style={{
+            position: 'absolute',
+            right: '66px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+          }}>
+            <div
+              className="chat-bubble"
+              onClick={() => setIsOpen(true)}
+              style={{
+                background: 'var(--surface)',
+                color: 'var(--ink)',
+                padding: '7px 13px',
+                borderRadius: '12px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                whiteSpace: 'nowrap',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.12)',
+                border: '1px solid var(--line)',
+                cursor: 'pointer',
+                animation: 'bubbleFloat 2.8s ease-in-out infinite',
+                userSelect: 'none',
+              }}
+            >
+              궁금한 점을 물어보세요!
+            </div>
+          </div>
+        )}
+
         {!isOpen && (
           <>
             <span style={{
@@ -451,6 +483,35 @@ export default function ChatBot() {
         @keyframes blink {
           0%, 100% { opacity: 1; }
           50%      { opacity: 0; }
+        }
+        @keyframes bubbleFloat {
+          0%, 100% { transform: translateY(0);    }
+          50%      { transform: translateY(-7px); }
+        }
+        .chat-bubble {
+          position: relative;
+        }
+        .chat-bubble::after {
+          content: '';
+          position: absolute;
+          right: -7px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 0; height: 0;
+          border-top: 6px solid transparent;
+          border-bottom: 6px solid transparent;
+          border-left: 7px solid var(--surface);
+        }
+        .chat-bubble::before {
+          content: '';
+          position: absolute;
+          right: -9px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 0; height: 0;
+          border-top: 7px solid transparent;
+          border-bottom: 7px solid transparent;
+          border-left: 8px solid var(--line);
         }
       `}</style>
     </>
